@@ -1,20 +1,26 @@
 package com.github.zhangyazhong.dao;
 
 import com.github.zhangyazhong.model.ModelTest;
-import junit.framework.TestCase;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 
 /**
  * @author zhangyazhong
  * @version 1.0
  */
-public class ModelTestDaoTest extends TestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:applicationContext_dao.xml"})
+public class ModelTestDaoTest {
+    @Resource
+    private ModelTestDao modelTestDao;
+    
+    @Test
     public void testSave() throws Exception {
-        ApplicationContext factory=new ClassPathXmlApplicationContext("classpath:applicationContext_dao.xml");
-        ModelTestDao modelTestDao = factory.getBean(ModelTestDao.class);
-        modelTestDao.save(new ModelTest("clean", new Timestamp(System.currentTimeMillis())));
+        modelTestDao.save(new ModelTest("SpringTest", new Timestamp(System.currentTimeMillis())));
     }
 }

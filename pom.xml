@@ -38,7 +38,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>3.8.1</version>
+                <version>4.11</version>
                 <scope>test</scope>
             </dependency>
             <!-- Spring Framework -->
@@ -200,6 +200,38 @@
         </dependency>
     </dependencies>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.ftl</include>
+                    <include>**/*.conf</include>
+                    <include>*.properties</include>
+                    <include>*.xml</include>
+                    <include>*.ftl</include>
+                    <include>*.conf</include>
+                </includes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.ftl</include>
+                    <include>**/*.conf</include>
+                    <include>*.properties</include>
+                    <include>*.xml</include>
+                    <include>*.ftl</include>
+                    <include>*.conf</include>
+                </includes>
+            </testResource>
+        </testResources>
         <pluginManagement>
             <plugins>
                 <plugin>
