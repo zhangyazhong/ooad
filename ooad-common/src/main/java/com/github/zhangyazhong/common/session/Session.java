@@ -17,7 +17,6 @@ public class Session {
         sessionMap = Maps.newHashMap();
     }
     
-    @Nullable
     public static <T> T getAttribute(String key) {
         return (T) sessionMap.get(key);
     }
