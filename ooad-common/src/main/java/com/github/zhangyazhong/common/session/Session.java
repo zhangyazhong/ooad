@@ -1,7 +1,6 @@
 package com.github.zhangyazhong.common.session;
 
 import com.google.common.collect.Maps;
-import com.sun.istack.internal.Nullable;
 
 import java.util.Map;
 
