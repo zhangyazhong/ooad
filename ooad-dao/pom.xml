@@ -124,8 +124,16 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.zhangyazhong</groupId>
             <artifactId>ooad-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.zhangyazhong</groupId>
+            <artifactId>ooad-common</artifactId>
         </dependency>
     </dependencies>
     <build>

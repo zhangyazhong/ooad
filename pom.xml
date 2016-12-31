@@ -9,6 +9,8 @@
         <module>ooad-model</module>
         <module>ooad-dao</module>
         <module>ooad-service</module>
+        <module>ooad-common</module>
+        <module>ooad-common</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -31,6 +33,9 @@
         <jandex.version>2.0.0.Final</jandex.version>
         <jboss-logging.version>3.1.0.GA</jboss-logging.version>
         <org.jboss.spec.javax.transaction.version>1.0.1.Final</org.jboss.spec.javax.transaction.version>
+        <json.version>20090211</json.version>
+        <google.guava.version>18.0</google.guava.version>
+        <commons-lang.version>2.6</commons-lang.version>
     </properties>
 
     <dependencyManagement>
@@ -182,6 +187,22 @@
             </dependency>
 
             <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>${json.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google.guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.github.zhangyazhong</groupId>
                 <artifactId>ooad-model</artifactId>
                 <version>${project.version}</version>
@@ -189,6 +210,11 @@
             <dependency>
                 <groupId>com.github.zhangyazhong</groupId>
                 <artifactId>ooad-dao</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.zhangyazhong</groupId>
+                <artifactId>ooad-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -1,6 +1,7 @@
 package com.github.zhangyazhong.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @author zhangyazhong
@@ -12,6 +13,7 @@ public class Assets {
     private int id;
     private String name;
     private String type;
+    private Set<AssetsRecord> assetsRecordSet;
     
     @Id
     @Column(name = "id")
@@ -43,6 +45,15 @@ public class Assets {
         this.type = type;
     }
     
+    @OneToMany(mappedBy = "assets")
+    public Set<AssetsRecord> getAssetsRecordSet() {
+        return assetsRecordSet;
+    }
+    
+    public void setAssetsRecordSet(Set<AssetsRecord> assetsRecordSet) {
+        this.assetsRecordSet = assetsRecordSet;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,5 +74,10 @@ public class Assets {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
+    }
+    
+    @Override
+    public String toString() {
+        return id + " | " + name + " | " + type;
     }
 }

@@ -75,5 +75,13 @@
             <artifactId>spring-test</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.zhangyazhong</groupId>
+            <artifactId>ooad-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.zhangyazhong</groupId>
+            <artifactId>ooad-model</artifactId>
+        </dependency>
     </dependencies>
 </project>

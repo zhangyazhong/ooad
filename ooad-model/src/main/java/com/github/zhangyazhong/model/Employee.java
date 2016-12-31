@@ -12,6 +12,7 @@ public class Employee {
     private int id;
     private String name;
     private String phone;
+    private String password;
     private Role role;
     
     @Id
@@ -43,6 +44,15 @@ public class Employee {
     
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    
+    @Basic
+    @Column(name = "password")
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     @Override

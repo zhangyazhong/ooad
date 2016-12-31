@@ -14,6 +14,12 @@ public class Role {
     private String description;
     private Set<Action> actionSet;
     
+    public Role() {
+    }
+    public Role(String description) {
+        this.description = description;
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
