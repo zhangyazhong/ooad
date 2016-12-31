@@ -10,7 +10,6 @@
         <module>ooad-dao</module>
         <module>ooad-service</module>
         <module>ooad-common</module>
-        <module>ooad-common</module>
     </modules>
     <packaging>pom</packaging>
 
