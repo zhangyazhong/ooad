@@ -1,7 +1,7 @@
 package com.github.zhangyazhong.model;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author zhangyazhong
@@ -13,7 +13,8 @@ public class Assets {
     private int id;
     private String name;
     private String type;
-    private Set<AssetsRecord> assetsRecordSet;
+    private List<AssetsRecord> assetsRecordList;
+    private AssetsRecord status;
     
     @Id
     @Column(name = "id")
@@ -45,13 +46,17 @@ public class Assets {
         this.type = type;
     }
     
-    @OneToMany(mappedBy = "assets")
-    public Set<AssetsRecord> getAssetsRecordSet() {
-        return assetsRecordSet;
+    @OneToMany(mappedBy = "assets", fetch = FetchType.EAGER)
+    @OrderBy("id asc")
+    public List<AssetsRecord> getAssetsRecordList() {
+        return assetsRecordList;
     }
     
-    public void setAssetsRecordSet(Set<AssetsRecord> assetsRecordSet) {
-        this.assetsRecordSet = assetsRecordSet;
+    public void setAssetsRecordList(List<AssetsRecord> assetsRecordList) {
+        this.assetsRecordList = assetsRecordList;
+        if (assetsRecordList != null && !assetsRecordList.isEmpty()) {
+            this.status = assetsRecordList.get(assetsRecordList.size() - 1);
+        }
     }
     
     @Override
@@ -79,5 +84,10 @@ public class Assets {
     @Override
     public String toString() {
         return id + " | " + name + " | " + type;
+    }
+    
+    @Transient
+    public AssetsRecord getStatus() {
+        return status;
     }
 }

@@ -49,6 +49,11 @@ public class EntityDao<T> {
             return null;
         }
     }
+    public List<T> query(String sql, Class clazz) {
+        SQLQuery query = this.getSession().createSQLQuery(sql);
+        query.addEntity(clazz);
+        return query.list();
+    }
     public List<T> query(String sql, Class clazz, int start, int limit) {
         SQLQuery query = this.getSession().createSQLQuery(sql);
         query.addEntity(clazz);

@@ -77,6 +77,11 @@ public class Employee {
         return result;
     }
     
+    @Override
+    public String toString() {
+        return name + " | " + phone;
+    }
+    
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "roleId", referencedColumnName = "id")
     public Role getRole() {

@@ -12,6 +12,12 @@ public class Action {
     private int id;
     private String description;
     
+    public final static String BUY = "购入";
+    public final static String RECEIVE = "领用";
+    public final static String RETURN = "归还";
+    public final static String DISCARD = "报废";
+    public final static String INSTALL = "安装";
+    
     @Id
     @Column(name = "id")
     public int getId() {

@@ -14,6 +14,11 @@ public class Role {
     private String description;
     private Set<Action> actionSet;
     
+    public final static String ADMIN = "管理员";
+    public final static String EMPLOYEE = "员工";
+    public final static String CLINET = "客户";
+    public final static String BUYER = "采购员";
+    
     public Role() {
     }
     public Role(String description) {

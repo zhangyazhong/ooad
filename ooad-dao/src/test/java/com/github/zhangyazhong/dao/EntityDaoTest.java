@@ -22,20 +22,38 @@ public class EntityDaoTest extends BaseTest {
     private EntityDao<Employee> employeeDao;
     
     /**
+     * 查找权限`id`为`1`的角色role，正确返回为管理员
+     */
+    @Test
+    public void testFind() {
+        Role role = roleDao.find(new HqlQuerySafe("Role").where("id=1"));
+        assert role != null;
+        assert role.getId() == 1;
+        assert role.getDescription().equals(Role.ADMIN);
+    }
+    
+    /**
      * 查询权限`id`为`1`的角色role，正确返回为管理员
      */
     @Test
     public void testQuery() {
-        HqlQueryStatement hqlQueryStatement = new HqlQuerySafe("Role").where("id=1");
-        List<Role> list = roleDao.query(hqlQueryStatement);
+        HqlQueryStatement hqlQueryStatement;
+        List<Role> list;
+        hqlQueryStatement = new HqlQuerySafe("Role").where("id=1");
+        list = roleDao.query(hqlQueryStatement);
         assert list.size() == 1;
         assert list.get(0).getId() == 1;
-        assert list.get(0).getDescription().equals("管理员");
+        assert list.get(0).getDescription().equals(Role.ADMIN);
         hqlQueryStatement = new HqlQuerySafe("Role").orderBy(HqlQueryStatement.Order.ASC, "id");
         list = roleDao.query(hqlQueryStatement, 0, 1);
         assert list.size() == 1;
         assert list.get(0).getId() == 1;
-        assert list.get(0).getDescription().equals("管理员");
+        assert list.get(0).getDescription().equals(Role.ADMIN);
+        String sql = "SELECT * FROM `role` WHERE id='1'";
+        list = roleDao.query(sql, Role.class, 0, 1);
+        assert list.size() == 1;
+        assert list.get(0).getId() == 1;
+        assert list.get(0).getDescription().equals(Role.ADMIN);
     }
     
     /**

@@ -1,6 +1,7 @@
 package com.github.zhangyazhong.service;
 
 import com.github.zhangyazhong.model.Assets;
+import com.github.zhangyazhong.model.AssetsRecord;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface IAssetsService {
     List<Assets> getAssets();
     
     List<Assets> getAssetsByEmployeeReceive(String phone);
+    
+    AssetsRecord getAssetsStatus(int id);
 }
