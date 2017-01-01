@@ -13,9 +13,19 @@ public class SpareRecord {
     private int id;
     private Timestamp date;
     private Employee employee;
-    private Spare spareBySpareId;
+    private Spare spare;
     private Assets assets;
     private Action action;
+    
+    public SpareRecord() {
+    }
+    public SpareRecord(Timestamp date, Employee employee, Spare spare, Assets assets, Action action) {
+        this.date = date;
+        this.employee = employee;
+        this.spare = spare;
+        this.assets = assets;
+        this.action = action;
+    }
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,12 +80,12 @@ public class SpareRecord {
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "spareId", referencedColumnName = "id")
-    public Spare getSpareBySpareId() {
-        return spareBySpareId;
+    public Spare getSpare() {
+        return spare;
     }
     
-    public void setSpareBySpareId(Spare spareBySpareId) {
-        this.spareBySpareId = spareBySpareId;
+    public void setSpare(Spare spareBySpareId) {
+        this.spare = spareBySpareId;
     }
     
     @ManyToOne(fetch = FetchType.EAGER)
@@ -96,5 +106,15 @@ public class SpareRecord {
     
     public void setAction(Action action) {
         this.action = action;
+    }
+    
+    @Transient
+    public boolean isIdle() {
+        return this.getAction().getDescription().equals(Action.BUY)
+                || this.getAction().getDescription().equals(Action.RETURN);
+    }
+    @Transient
+    public boolean isUsing() {
+        return this.getAction().getDescription().equals(Action.INSTALL);
     }
 }

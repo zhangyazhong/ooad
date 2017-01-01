@@ -1,6 +1,7 @@
 package com.github.zhangyazhong.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author zhangyazhong
@@ -11,6 +12,8 @@ import javax.persistence.*;
 public class Spare {
     private int id;
     private String name;
+    private List<SpareRecord> spareRecordList;
+    private SpareRecord status;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,5 +54,23 @@ public class Spare {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+    
+    @OneToMany(mappedBy = "spare", fetch = FetchType.EAGER)
+    @OrderBy("id asc")
+    public List<SpareRecord> getSpareRecordList() {
+        return spareRecordList;
+    }
+    
+    public void setSpareRecordList(List<SpareRecord> spareRecordList) {
+        this.spareRecordList = spareRecordList;
+        if (spareRecordList != null && !spareRecordList.isEmpty()) {
+            this.status = spareRecordList.get(spareRecordList.size() - 1);
+        }
+    }
+    
+    @Transient
+    public SpareRecord getStatus() {
+        return status;
     }
 }

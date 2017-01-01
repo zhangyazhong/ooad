@@ -16,6 +16,15 @@ public class AssetsRecord {
     private Assets assets;
     private Action action;
     
+    public AssetsRecord() {
+    }
+    public AssetsRecord(Timestamp date, Employee employee, Assets assets, Action action) {
+        this.date = date;
+        this.employee = employee;
+        this.assets = assets;
+        this.action = action;
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -85,5 +94,15 @@ public class AssetsRecord {
     
     public void setAction(Action action) {
         this.action = action;
+    }
+    
+    @Transient
+    public boolean isIdle() {
+        return this.getAction().getDescription().equals(Action.BUY)
+                || this.getAction().getDescription().equals(Action.RETURN);
+    }
+    @Transient
+    public boolean isUsing() {
+        return this.getAction().getDescription().equals(Action.RECEIVE);
     }
 }

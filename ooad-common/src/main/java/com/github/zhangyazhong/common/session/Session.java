@@ -17,7 +17,10 @@ public class Session {
     }
     
     public static <T> T getAttribute(String key) {
-        return (T) sessionMap.get(key);
+        if (sessionMap.containsKey(key)) {
+            return (T) sessionMap.get(key);
+        }
+        return null;
     }
     
     public static <T> void setAttribute(String key, T t) {

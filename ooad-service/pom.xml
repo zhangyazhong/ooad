@@ -83,5 +83,9 @@
             <groupId>com.github.zhangyazhong</groupId>
             <artifactId>ooad-model</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.zhangyazhong</groupId>
+            <artifactId>ooad-common</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -17,6 +17,23 @@ public class Action {
     public final static String RETURN = "归还";
     public final static String DISCARD = "报废";
     public final static String INSTALL = "安装";
+    private final static String[] ACTIONS = {"", BUY, RECEIVE, RETURN, DISCARD, INSTALL};
+    
+    public Action() {
+    }
+    private Action(int id, String description) {
+        this.id = id;
+        this.description = description;
+    }
+    
+    public static Action create(String action) {
+        for (int i = 1; i < ACTIONS.length; i++) {
+            if (ACTIONS[i].equals(action)) {
+                return new Action(i, action);
+            }
+        }
+        return null;
+    }
     
     @Id
     @Column(name = "id")

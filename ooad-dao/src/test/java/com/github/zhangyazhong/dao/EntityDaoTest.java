@@ -7,6 +7,7 @@ import com.github.zhangyazhong.model.Role;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
+import org.springframework.test.annotation.Rollback;
 
 import javax.annotation.Resource;
 import java.util.List;

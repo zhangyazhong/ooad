@@ -16,7 +16,18 @@ public class Assets {
     private List<AssetsRecord> assetsRecordList;
     private AssetsRecord status;
     
+    public final static String TYPE_EQUIPMENT = "equipment";
+    public final static String TYPE_SOFTWARE = "software";
+    
+    public Assets() {
+    }
+    public Assets(String name, String type) {
+        this.name = name;
+        this.type = type;
+    }
+    
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return id;

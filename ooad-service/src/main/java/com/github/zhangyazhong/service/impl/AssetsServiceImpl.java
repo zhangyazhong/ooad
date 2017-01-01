@@ -2,15 +2,16 @@ package com.github.zhangyazhong.service.impl;
 
 import com.github.zhangyazhong.common.hql.query.HqlQuerySafe;
 import com.github.zhangyazhong.common.hql.query.HqlQueryStatement;
+import com.github.zhangyazhong.common.permission.AssetsPermission;
+import com.github.zhangyazhong.common.session.Session;
 import com.github.zhangyazhong.dao.EntityDao;
-import com.github.zhangyazhong.model.Action;
-import com.github.zhangyazhong.model.Assets;
-import com.github.zhangyazhong.model.AssetsRecord;
+import com.github.zhangyazhong.model.*;
 import com.github.zhangyazhong.service.IAssetsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -22,14 +23,18 @@ import java.util.List;
 public class AssetsServiceImpl implements IAssetsService {
     @Resource
     private EntityDao<Assets> assetsDao;
+    @Resource
+    private EntityDao<AssetsRecord> assetsRecordDao;
     
     @Override
+    @AssetsPermission({Role.ADMIN, Role.CLINET})
     public List<Assets> getAssets() {
         HqlQueryStatement getAssets = new HqlQuerySafe("Assets").orderBy(HqlQueryStatement.Order.ASC, "id");
         return assetsDao.query(getAssets);
     }
     
     @Override
+    @AssetsPermission({Role.ADMIN, Role.CLINET})
     public List<Assets> getAssetsByEmployeeReceive(String phone) {
         String sql = String.format("SELECT assets.* " +
                 "FROM " +
@@ -63,8 +68,62 @@ public class AssetsServiceImpl implements IAssetsService {
     
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
+    @AssetsPermission({Role.ADMIN, Role.CLINET})
     public AssetsRecord getAssetsStatus(int id) {
         HqlQueryStatement findAssets = new HqlQuerySafe("Assets").where("id=" + id);
         return assetsDao.find(findAssets).getStatus();
+    }
+    
+    @Override
+    @AssetsPermission({Role.ADMIN, Role.BUYER})
+    public Boolean buyAssets(Assets assets) {
+        Employee employee = Session.getAttribute("employee");
+        Action action = Action.create(Action.BUY);
+        AssetsRecord assetsRecord = new AssetsRecord(new Timestamp(System.currentTimeMillis()), employee, assets, action);
+        assetsDao.save(assets);
+        assetsRecordDao.save(assetsRecord);
+        return true;
+    }
+    
+    @Override
+    @AssetsPermission({Role.ADMIN, Role.EMPLOYEE})
+    public Boolean receiveAssets(Assets assets) {
+        AssetsRecord assetsRecord = getAssetsStatus(assets.getId());
+        Employee employee = Session.getAttribute("employee");
+        Action action = Action.create(Action.RECEIVE);
+        if (assetsRecord != null && assetsRecord.isIdle()) {
+            assetsRecord = new AssetsRecord(new Timestamp(System.currentTimeMillis()), employee, assets, action);
+            assetsRecordDao.save(assetsRecord);
+            return true;
+        }
+        return false;
+    }
+    
+    @Override
+    @AssetsPermission({Role.ADMIN, Role.EMPLOYEE})
+    public Boolean returnAssets(Assets assets) {
+        AssetsRecord assetsRecord = getAssetsStatus(assets.getId());
+        Employee employee = Session.getAttribute("employee");
+        Action action = Action.create(Action.RETURN);
+        if (assetsRecord != null && assetsRecord.isUsing()) {
+            assetsRecord = new AssetsRecord(new Timestamp(System.currentTimeMillis()), employee, assets, action);
+            assetsRecordDao.save(assetsRecord);
+            return true;
+        }
+        return false;
+    }
+    
+    @Override
+    @AssetsPermission({Role.ADMIN, Role.BUYER})
+    public Boolean discardAssets(Assets assets) {
+        AssetsRecord assetsRecord = getAssetsStatus(assets.getId());
+        Employee employee = Session.getAttribute("employee");
+        Action action = Action.create(Action.DISCARD);
+        if (assetsRecord != null && assetsRecord.isIdle()) {
+            assetsRecord = new AssetsRecord(new Timestamp(System.currentTimeMillis()), employee, assets, action);
+            assetsRecordDao.save(assetsRecord);
+            return true;
+        }
+        return false;
     }
 }
