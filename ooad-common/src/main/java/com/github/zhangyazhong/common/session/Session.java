@@ -30,4 +30,8 @@ public class Session {
     public static void removeAttribute(String key) {
         sessionMap.remove(key);
     }
+    
+    public static void clear() {
+        sessionMap.clear();
+    }
 }

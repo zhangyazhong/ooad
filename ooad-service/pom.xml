@@ -76,6 +76,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.zhangyazhong</groupId>
             <artifactId>ooad-dao</artifactId>
         </dependency>

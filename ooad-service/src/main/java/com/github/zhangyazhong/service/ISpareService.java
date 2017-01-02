@@ -14,6 +14,13 @@ import java.util.List;
 @Service
 public interface ISpareService {
     /**
+     * 获取备件
+     *
+     * @return 备件实体
+     */
+    Spare findSpare(int id);
+    
+    /**
      * 获取所有备件
      *
      * @return 备件列表

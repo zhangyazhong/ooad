@@ -13,6 +13,13 @@ import java.util.List;
 @Service
 public interface IAssetsService {
     /**
+     * 根据id查找资产
+     *
+     * @return 资产实体
+     */
+    Assets findAssets(int id);
+    
+    /**
      * 获取所有资产
      *
      * @return 资产列表

@@ -79,7 +79,7 @@ public class Employee {
     
     @Override
     public String toString() {
-        return name + " | " + phone;
+        return name + "(" + role.getDescription() + ")" + " | " + phone;
     }
     
     @ManyToOne(fetch = FetchType.EAGER)

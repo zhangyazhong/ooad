@@ -66,6 +66,13 @@ public class AssetsRecord {
         return result;
     }
     
+    @Override
+    public String toString() {
+        return this.getEmployee() + " | "
+                + this.getAction().getDescription() + " | "
+                + this.getDate();
+    }
+    
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employeeId", referencedColumnName = "id")
     public Employee getEmployee() {
@@ -104,5 +111,9 @@ public class AssetsRecord {
     @Transient
     public boolean isUsing() {
         return this.getAction().getDescription().equals(Action.RECEIVE);
+    }
+    @Transient
+    public boolean isScrapped() {
+        return this.getAction().getDescription().equals(Action.DISCARD);
     }
 }

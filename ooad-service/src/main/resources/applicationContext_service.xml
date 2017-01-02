@@ -16,6 +16,7 @@
     <bean id="assetsPermissionValidate" class="com.github.zhangyazhong.aspect.AssetsPermissionValidate"/>
     <bean id="sparePermissionValidate" class="com.github.zhangyazhong.aspect.SparePermissionValidate"/>
     <bean id="assetsService" class="com.github.zhangyazhong.service.impl.AssetsServiceImpl"/>
+    <bean id="spareService" class="com.github.zhangyazhong.service.impl.SpareServiceImpl"/>
     <bean id="employeeService" class="com.github.zhangyazhong.service.impl.EmployeeServiceImpl"/>
 
     <context:component-scan base-package="com.github.zhangyazhong.service" />

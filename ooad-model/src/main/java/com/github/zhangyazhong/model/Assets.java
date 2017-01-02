@@ -1,6 +1,7 @@
 package com.github.zhangyazhong.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,11 @@ public class Assets {
     public Assets() {
     }
     public Assets(String name, String type) {
+        this.name = name;
+        this.type = type;
+    }
+    public Assets(int id, String name, String type) {
+        this.id = id;
         this.name = name;
         this.type = type;
     }
@@ -57,7 +63,7 @@ public class Assets {
         this.type = type;
     }
     
-    @OneToMany(mappedBy = "assets", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "assets", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy("id asc")
     public List<AssetsRecord> getAssetsRecordList() {
         return assetsRecordList;
@@ -100,5 +106,13 @@ public class Assets {
     @Transient
     public AssetsRecord getStatus() {
         return status;
+    }
+    
+    public void addAssetsRecord(AssetsRecord assetsRecord) {
+        if (this.getAssetsRecordList() == null) {
+            this.setAssetsRecordList(new ArrayList<>());
+        }
+        this.getAssetsRecordList().add(assetsRecord);
+        this.status = assetsRecord;
     }
 }

@@ -2,6 +2,8 @@ package com.github.zhangyazhong.service;
 
 import com.github.zhangyazhong.model.Assets;
 import com.github.zhangyazhong.model.AssetsRecord;
+import com.github.zhangyazhong.model.Employee;
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,41 +19,97 @@ public class AssetsServiceTest extends BaseTest {
     private IAssetsService assetsService;
     @Resource
     private IEmployeeService employeeService;
+    private static Employee employee;
     
     @Before
     public void setUp() {
-        employeeService.login("123456", "123456");
+        employee = employeeService.login("13061991332", "123456");
+    }
+    
+    @Test
+    public void findAssets() {
+        Assets dbAssets = assetsService.findAssets(1);
+        Assets stdAssets = new Assets(1, "ThinkPad", Assets.TYPE_EQUIPMENT);
+        assert dbAssets.equals(stdAssets);
+//      System.out.println(dbAssets);
     }
     
     @Test
     public void testGetAssets() {
-        List<Assets> assetsList = assetsService.getAssets();
-        assetsList.forEach(System.out::println);
+        List<Assets> dbAssetsList = assetsService.getAssets();
+        List<Assets> stdAssetsList = Lists.newArrayList(
+                new Assets(1, "ThinkPad", Assets.TYPE_EQUIPMENT),
+                new Assets(2, "Macbook Air", Assets.TYPE_EQUIPMENT),
+                new Assets(8, "Samsung Note 7", Assets.TYPE_EQUIPMENT)
+        );
+        assert dbAssetsList.size() == stdAssetsList.size();
+        for (int i = 0; i < dbAssetsList.size(); i++) {
+            assert dbAssetsList.get(i).equals(stdAssetsList.get(i));
+        }
+//      dbAssetsList.forEach(System.out::println);
     }
     
     @Test
     public void testGetAssetsByEmployeeReceive() {
-        List<Assets> assetsList = assetsService.getAssetsByEmployeeReceive("123456");
-        assetsList.forEach(System.out::println);
+        List<Assets> dbAssetsList = assetsService.getAssetsByEmployeeReceive(employee.getPhone());
+        List<Assets> stdAssetsList = Lists.newArrayList(
+                new Assets(2, "Macbook Air", Assets.TYPE_EQUIPMENT)
+        );
+        assert dbAssetsList.size() == stdAssetsList.size();
+        for (int i = 0; i < dbAssetsList.size(); i++) {
+            assert dbAssetsList.get(i).equals(stdAssetsList.get(i));
+        }
+//        dbAssetsList.forEach(System.out::println);
     }
     
     @Test
     public void testGetAssetsStatus() {
-        AssetsRecord assetsRecord = assetsService.getAssetsStatus(1);
-        if (assetsRecord != null) {
-            System.out.println(assetsRecord.getEmployee()
-                    + " | " + assetsRecord.getAction().getDescription()
-                    + " | " + assetsRecord.getDate());
-        } else {
-            System.out.println("(null)");
-        }
+        int testIdleAssetsId = 1;
+        int testUsingAssetsId = 2;
+        int testScrappedAssetsId = 8;
+        AssetsRecord idleStatus = assetsService.getAssetsStatus(testIdleAssetsId);
+        AssetsRecord usingStatus = assetsService.getAssetsStatus(testUsingAssetsId);
+        AssetsRecord scrappedStatus = assetsService.getAssetsStatus(testScrappedAssetsId);
+        assert idleStatus.isIdle();
+        assert usingStatus.isUsing();
+        assert scrappedStatus.isScrapped();
     }
     
     @Test
     public void testBuyAssets() {
-        Assets assets = new Assets("iMac", Assets.TYPE_EQUIPMENT);
+        Assets assets = new Assets("Samsung Note 6", Assets.TYPE_EQUIPMENT);
         assetsService.buyAssets(assets);
-        List<Assets> assetsList = assetsService.getAssets();
-        assetsList.forEach(System.out::println);
+        assert assetsService.findAssets(assets.getId()).equals(assets);
+//        assetsService.getAssets().forEach(System.out::println);
+    }
+    
+    @Test
+    public void testReceiveAssets() {
+        int testIdleAssetsId = 1;
+        assert assetsService.getAssetsStatus(testIdleAssetsId).isIdle();
+        Assets assets = assetsService.findAssets(testIdleAssetsId);
+        assert assetsService.receiveAssets(assets);
+        assert assetsService.getAssetsStatus(testIdleAssetsId).isUsing();
+        // TODO: 下面两句验证了员工是否领用了该资产
+        List<Assets> assetsList = assetsService.getAssetsByEmployeeReceive(employee.getPhone());
+        assert assetsList.get(assetsList.size() - 1).equals(assets);
+    }
+    
+    @Test
+    public void testReturnAssets() {
+        int testUsingAssetsId = 2;
+        assert assetsService.getAssetsStatus(testUsingAssetsId).isUsing();
+        Assets assets = assetsService.findAssets(testUsingAssetsId);
+        assert assetsService.returnAssets(assets);
+        assert assetsService.getAssetsStatus(testUsingAssetsId).isIdle();
+    }
+    
+    @Test
+    public void testDiscardAssets() {
+        int testIdleAssetsId = 1;
+        assert assetsService.getAssetsStatus(testIdleAssetsId).isIdle();
+        Assets assets = assetsService.findAssets(testIdleAssetsId);
+        assert assetsService.discardAssets(assets);
+        assert assetsService.getAssetsStatus(testIdleAssetsId).isScrapped();
     }
 }

@@ -23,27 +23,31 @@ import java.util.List;
 public class SpareServiceImpl implements ISpareService {
     @Resource
     private EntityDao<Spare> spareDao;
-    @Resource
-    private EntityDao<SpareRecord> spareRecordDao;
     
     @Override
-    @SparePermission({Role.ADMIN, Role.CLINET})
+    public Spare findSpare(int id) {
+        HqlQueryStatement findSpare = new HqlQuerySafe("Spare").where("id=" + id);
+        return spareDao.find(findSpare);
+    }
+    
+    @Override
+    @SparePermission({Role.ADMIN, Role.CLIENT})
     public List<Spare> getSpare() {
         HqlQueryStatement getSpare = new HqlQuerySafe("Spare").orderBy(HqlQueryStatement.Order.ASC, "id");
         return spareDao.query(getSpare);
     }
     
     @Override
-    @SparePermission({Role.ADMIN, Role.CLINET})
+    @SparePermission({Role.ADMIN, Role.CLIENT})
     public SpareRecord getSpareStatus(int id) {
-        HqlQueryStatement findSpare = new HqlQuerySafe("Assets").where("id=" + id);
+        HqlQueryStatement findSpare = new HqlQuerySafe("Spare").where("id=" + id);
         return spareDao.find(findSpare).getStatus();
     }
     
     @Override
-    @SparePermission({Role.ADMIN, Role.CLINET})
+    @SparePermission({Role.ADMIN, Role.CLIENT})
     public List<SpareRecord> getSpareHistory(int id) {
-        HqlQueryStatement findSpare = new HqlQuerySafe("Assets").where("id=" + id);
+        HqlQueryStatement findSpare = new HqlQuerySafe("Spare").where("id=" + id);
         return spareDao.find(findSpare).getSpareRecordList();
     }
     
@@ -53,8 +57,8 @@ public class SpareServiceImpl implements ISpareService {
         Employee employee = Session.getAttribute("employee");
         Action action = Action.create(Action.BUY);
         SpareRecord spareRecord = new SpareRecord(new Timestamp(System.currentTimeMillis()), employee, spare, null, action);
+        spare.addSpareRecord(spareRecord);
         spareDao.save(spare);
-        spareRecordDao.save(spareRecord);
         return true;
     }
     
@@ -64,9 +68,10 @@ public class SpareServiceImpl implements ISpareService {
         SpareRecord spareRecord = getSpareStatus(spare.getId());
         Employee employee = Session.getAttribute("employee");
         Action action = Action.create(Action.INSTALL);
-        if (spareRecord != null && spareRecord.isIdle()) {
+        if (spareRecord != null && spareRecord.isIdle() && assets.getStatus().isUsing() && assets.getStatus().getEmployee().equals(employee)) {
             spareRecord = new SpareRecord(new Timestamp(System.currentTimeMillis()), employee, spare, assets, action);
-            spareRecordDao.save(spareRecord);
+            spare.addSpareRecord(spareRecord);
+            spareDao.update(spare);
             return true;
         }
         return false;
@@ -78,9 +83,10 @@ public class SpareServiceImpl implements ISpareService {
         SpareRecord spareRecord = getSpareStatus(spare.getId());
         Employee employee = Session.getAttribute("employee");
         Action action = Action.create(Action.RETURN);
-        if (spareRecord != null && spareRecord.isUsing()) {
+        if (spareRecord != null && spareRecord.isUsing() && spareRecord.getEmployee().equals(employee)) {
             spareRecord = new SpareRecord(new Timestamp(System.currentTimeMillis()), employee, spare, null, action);
-            spareRecordDao.save(spareRecord);
+            spare.addSpareRecord(spareRecord);
+            spareDao.update(spare);
             return true;
         }
         return false;
@@ -94,7 +100,8 @@ public class SpareServiceImpl implements ISpareService {
         Action action = Action.create(Action.DISCARD);
         if (spareRecord != null && spareRecord.isIdle()) {
             spareRecord = new SpareRecord(new Timestamp(System.currentTimeMillis()), employee, spare, null, action);
-            spareRecordDao.save(spareRecord);
+            spare.addSpareRecord(spareRecord);
+            spareDao.update(spare);
             return true;
         }
         return false;

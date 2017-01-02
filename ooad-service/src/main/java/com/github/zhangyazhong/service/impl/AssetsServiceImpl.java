@@ -23,18 +23,22 @@ import java.util.List;
 public class AssetsServiceImpl implements IAssetsService {
     @Resource
     private EntityDao<Assets> assetsDao;
-    @Resource
-    private EntityDao<AssetsRecord> assetsRecordDao;
     
     @Override
-    @AssetsPermission({Role.ADMIN, Role.CLINET})
+    public Assets findAssets(int id) {
+        HqlQueryStatement findAssets = new HqlQuerySafe("Assets").where("id=" + id);
+        return assetsDao.find(findAssets);
+    }
+    
+    @Override
+    @AssetsPermission({Role.ADMIN, Role.CLIENT})
     public List<Assets> getAssets() {
         HqlQueryStatement getAssets = new HqlQuerySafe("Assets").orderBy(HqlQueryStatement.Order.ASC, "id");
         return assetsDao.query(getAssets);
     }
     
     @Override
-    @AssetsPermission({Role.ADMIN, Role.CLINET})
+    @AssetsPermission({Role.ADMIN, Role.CLIENT})
     public List<Assets> getAssetsByEmployeeReceive(String phone) {
         String sql = String.format("SELECT assets.* " +
                 "FROM " +
@@ -68,7 +72,7 @@ public class AssetsServiceImpl implements IAssetsService {
     
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
-    @AssetsPermission({Role.ADMIN, Role.CLINET})
+    @AssetsPermission({Role.ADMIN, Role.CLIENT})
     public AssetsRecord getAssetsStatus(int id) {
         HqlQueryStatement findAssets = new HqlQuerySafe("Assets").where("id=" + id);
         return assetsDao.find(findAssets).getStatus();
@@ -80,8 +84,8 @@ public class AssetsServiceImpl implements IAssetsService {
         Employee employee = Session.getAttribute("employee");
         Action action = Action.create(Action.BUY);
         AssetsRecord assetsRecord = new AssetsRecord(new Timestamp(System.currentTimeMillis()), employee, assets, action);
+        assets.addAssetsRecord(assetsRecord);
         assetsDao.save(assets);
-        assetsRecordDao.save(assetsRecord);
         return true;
     }
     
@@ -93,7 +97,8 @@ public class AssetsServiceImpl implements IAssetsService {
         Action action = Action.create(Action.RECEIVE);
         if (assetsRecord != null && assetsRecord.isIdle()) {
             assetsRecord = new AssetsRecord(new Timestamp(System.currentTimeMillis()), employee, assets, action);
-            assetsRecordDao.save(assetsRecord);
+            assets.addAssetsRecord(assetsRecord);
+            assetsDao.update(assets);
             return true;
         }
         return false;
@@ -105,9 +110,10 @@ public class AssetsServiceImpl implements IAssetsService {
         AssetsRecord assetsRecord = getAssetsStatus(assets.getId());
         Employee employee = Session.getAttribute("employee");
         Action action = Action.create(Action.RETURN);
-        if (assetsRecord != null && assetsRecord.isUsing()) {
+        if (assetsRecord != null && assetsRecord.isUsing() && assetsRecord.getEmployee().equals(employee)) {
             assetsRecord = new AssetsRecord(new Timestamp(System.currentTimeMillis()), employee, assets, action);
-            assetsRecordDao.save(assetsRecord);
+            assets.addAssetsRecord(assetsRecord);
+            assetsDao.update(assets);
             return true;
         }
         return false;
@@ -121,7 +127,8 @@ public class AssetsServiceImpl implements IAssetsService {
         Action action = Action.create(Action.DISCARD);
         if (assetsRecord != null && assetsRecord.isIdle()) {
             assetsRecord = new AssetsRecord(new Timestamp(System.currentTimeMillis()), employee, assets, action);
-            assetsRecordDao.save(assetsRecord);
+            assets.addAssetsRecord(assetsRecord);
+            assetsDao.update(assets);
             return true;
         }
         return false;

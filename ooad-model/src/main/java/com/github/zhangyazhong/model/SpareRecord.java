@@ -117,4 +117,8 @@ public class SpareRecord {
     public boolean isUsing() {
         return this.getAction().getDescription().equals(Action.INSTALL);
     }
+    @Transient
+    public boolean isScrapped() {
+        return this.getAction().getDescription().equals(Action.DISCARD);
+    }
 }
