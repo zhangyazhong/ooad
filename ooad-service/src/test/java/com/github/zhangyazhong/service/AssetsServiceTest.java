@@ -31,7 +31,6 @@ public class AssetsServiceTest extends BaseTest {
         Assets dbAssets = assetsService.findAssets(1);
         Assets stdAssets = new Assets(1, "ThinkPad", Assets.TYPE_EQUIPMENT);
         assert dbAssets.equals(stdAssets);
-//      System.out.println(dbAssets);
     }
     
     @Test
@@ -46,7 +45,6 @@ public class AssetsServiceTest extends BaseTest {
         for (int i = 0; i < dbAssetsList.size(); i++) {
             assert dbAssetsList.get(i).equals(stdAssetsList.get(i));
         }
-//      dbAssetsList.forEach(System.out::println);
     }
     
     @Test
@@ -59,7 +57,6 @@ public class AssetsServiceTest extends BaseTest {
         for (int i = 0; i < dbAssetsList.size(); i++) {
             assert dbAssetsList.get(i).equals(stdAssetsList.get(i));
         }
-//        dbAssetsList.forEach(System.out::println);
     }
     
     @Test
@@ -80,7 +77,6 @@ public class AssetsServiceTest extends BaseTest {
         Assets assets = new Assets("Samsung Note 6", Assets.TYPE_EQUIPMENT);
         assetsService.buyAssets(assets);
         assert assetsService.findAssets(assets.getId()).equals(assets);
-//        assetsService.getAssets().forEach(System.out::println);
     }
     
     @Test
@@ -90,7 +86,6 @@ public class AssetsServiceTest extends BaseTest {
         Assets assets = assetsService.findAssets(testIdleAssetsId);
         assert assetsService.receiveAssets(assets);
         assert assetsService.getAssetsStatus(testIdleAssetsId).isUsing();
-        // TODO: 下面两句验证了员工是否领用了该资产
         List<Assets> assetsList = assetsService.getAssetsByEmployeeReceive(employee.getPhone());
         assert assetsList.get(assetsList.size() - 1).equals(assets);
     }

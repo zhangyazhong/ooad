@@ -38,8 +38,8 @@ public class SpareServiceTest extends BaseTest {
         List<Spare> dbSpareList = spareService.getSpare();
         List<Spare> stdSpareList = Lists.newArrayList(
                 new Spare(1, "显示屏"),
-                new Spare(2, "鼠标"),
-                new Spare(3, "音响")
+                new Spare(2, "内存"),
+                new Spare(3, "硬盘")
         );
         assert dbSpareList.size() == stdSpareList.size();
         for (int i = 0; i < dbSpareList.size(); i++) {
@@ -80,7 +80,7 @@ public class SpareServiceTest extends BaseTest {
     
     @Test
     public void testBuySpare() {
-        Spare spare = new Spare("机械键盘");
+        Spare spare = new Spare("显卡");
         spareService.buySpare(spare);
         assert spareService.findSpare(spare.getId()).equals(spare);
     }
